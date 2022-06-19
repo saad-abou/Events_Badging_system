@@ -72,13 +72,24 @@
                                 <v-icon>{{ getConfirmeIcon(item.confirme) }}</v-icon>
                             </v-chip>
                         </template>
+                        <template v-slot:item.statut="{ item }">
+                            <v-chip :color="getStatut(item.statut)" dark >
+                                <b>{{ item.statut }}</b>
+                            </v-chip>
+                        </template>
                         <template v-slot:top>
                             <v-toolbar flat>
                                 <v-divider class="mx-4" inset vertical ></v-divider>
                                     <v-spacer></v-spacer>
-                                <v-dialog v-model="dialogconfirmation" max-width="500px">
+                                <v-dialog v-model="dialogconfirmation" max-width="500px" persistent>
                                     <v-card>
-                                        <v-card-title class="text-h5">Êtes-vous sûr de confirmer l'inscription de {{ editedItem.name }} {{ editedItem.prenom }} ?</v-card-title>
+                                        <v-card-title class="text-h5">Confirmation de {{ editedItem.name }} {{ editedItem.prenom }} ?</v-card-title>
+                                        <v-card-text>
+                                            <v-col cols="12" md="12" sm="12" v-if="newEmail">
+                                                <v-text-field label="Email*" oninput="this.value = this.value.toLowerCase()"  :rules="[emailRules.email,checkExiste]"  color="blue darken-4" v-model="editedItem.email" class="my-input" required>
+                                                </v-text-field>
+                                            </v-col>
+                                        </v-card-text>
                                         <v-card-actions>
                                             <v-spacer></v-spacer>
                                                 <v-btn color="blue darken-1" text @click="close">Annuler</v-btn>
@@ -130,12 +141,18 @@ export default {
             users:[],
             search:'',
             pdf:false,
+            newEmail:false,
+            emailRules: {
+                   required: v => !!v || 'E-mail vide',
+                   email: v => /.+@.+\..+/.test(v) || 'Email doit être valide',
+                },
             existeEmailInfo:'',
             editedIndex: -1,
             all_headers:[
                 { text: 'Nom', align: 'start', value: 'name', },
                 { text: 'Prenom', value: 'prenom' },
                 { text: 'Email', value: 'email' },
+                { text: 'Statut', value: 'statut' },
                 { text: 'Confirme', value: 'confirme' },
                 { text: 'Actions', value: 'actions', sortable: false },
             ],
@@ -192,6 +209,7 @@ export default {
         editItemConfirm (item) {
             this.editedIndex = this.users.indexOf(item)
             this.editedItem = Object.assign({}, item)
+            !this.editedItem.email ? this.newEmail = true : this.newEmail = false
             this.dialogconfirmation = true
         },
 
@@ -227,6 +245,23 @@ export default {
                return "mdi-close-thick"
            }
         },
+        getStatut(statut){
+            if(statut =="participant"){
+               return "#0D47A1"
+           }
+           else if(statut =="speaker"){
+                return "#4527A0"
+           }
+            else if(statut =="bureau"){
+                return "#B71C1C"
+           }
+           else if(statut =="sponsor"){
+                return "green"
+           }
+           else{
+            return "#000000"
+           }
+        },
 
         print (item) {
             this.printPrenom = item.prenom
@@ -259,6 +294,20 @@ export default {
         closeInfodialog(){
                 this.existeEmailInfo = ''
                 this.dialogInfo = false
+            },
+        checkExiste(val) {
+                if (val && val.length>9){
+                    const count2 = this.users.filter(item => item.email === val).length
+                    if(count2>0){
+                        return `email deja existe`;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+                else{
+                    return true;
+                }
             },
     },
     computed: {

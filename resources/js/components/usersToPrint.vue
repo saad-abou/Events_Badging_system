@@ -50,9 +50,9 @@
                             ></v-text-field>
                         </v-card-title>
                         <v-data-table :headers="all_headers" :items="usersWithoutBadge" :search="search" sort-by="calories"  class="elevation-1" >
-                            <template v-slot:item.confirme="{ item }">
-                                <v-chip :color="getConfirme(item.confirme)" dark >
-                                    <v-icon>{{ getConfirmeIcon(item.confirme) }}</v-icon>
+                            <template v-slot:item.statut="{ item }">
+                                <v-chip :color="getStatut(item.statut)" dark >
+                                    <b>{{ item.statut }}</b>
                                 </v-chip>
                             </template>
                             <template v-slot:top>
@@ -86,9 +86,9 @@
                             ></v-text-field>
                         </v-card-title>
                         <v-data-table :headers="all_headers" :items="usersWithBadge" :search="search" sort-by="calories"  class="elevation-1" >
-                            <template v-slot:item.confirme="{ item }">
-                                <v-chip :color="getConfirme(item.confirme)" dark >
-                                    <v-icon>{{ getConfirmeIcon(item.confirme) }}</v-icon>
+                            <template v-slot:item.statut="{ item }">
+                                <v-chip :color="getStatut(item.statut)" dark >
+                                    <b>{{ item.statut }}</b>
                                 </v-chip>
                             </template>
                             <template v-slot:top>
@@ -158,7 +158,7 @@ export default {
                 { text: 'Nom', align: 'start', value: 'name', },
                 { text: 'Prenom', value: 'prenom' },
                 { text: 'Badge', value: 'badge' },
-                { text: 'code', value: 'barecode' },
+                { text: 'Statut', value: 'statut' },
                 { text: 'Actions', value: 'actions', sortable: false },
             ],
             editedItem: {
@@ -273,20 +273,21 @@ export default {
             console.log(`Ready to start scanning barcodes`)
         }, 
 
-        getConfirme (confirme) {
-           if(confirme){
-               return "green"
+        getStatut(statut){
+            if(statut =="participant"){
+               return "#0D47A1"
+           }
+           else if(statut =="speaker"){
+                return "#4527A0"
+           }
+            else if(statut =="bureau"){
+                return "#B71C1C"
+           }
+           else if(statut =="sponsor"){
+                return "green"
            }
            else{
-               return "red"
-           }
-        },
-        getConfirmeIcon (confirme) {
-           if(confirme){
-               return "mdi-check-bold"
-           }
-           else{
-               return "mdi-close-thick"
+            return "#000000"
            }
         },
 

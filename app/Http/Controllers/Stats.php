@@ -65,6 +65,7 @@ class Stats extends Controller
     public function confirmUser(Request $request){
         $user = User::where('id', $request->editedItem['id'])->update([  
                 'confirme' => '1',
+                'email' =>  isset($request->editedItem['email']) ? $request->editedItem['email'] : null,
                 'admin_id' => Auth::user()->id,
         ]);
         $userconfirme=confirmes::create([
@@ -72,6 +73,7 @@ class Stats extends Controller
             'confirme' => '1',
             'prenom'=> $request->editedItem['prenom'],
             'email' => $request->editedItem['email'],
+            'statut' => $request->editedItem['statut'],
             'admin_id' => Auth::user()->id,
             'user_id' => $request->editedItem['id'],
             'badge' => isset($request->editedItem['badge']) ? $request->editedItem['badge'] : null,
