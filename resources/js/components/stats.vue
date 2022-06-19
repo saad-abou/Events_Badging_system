@@ -48,7 +48,12 @@
                                     <span>GSM :<b>{{existeEmailInfo.tlf}}</b></span><br>
                                     <span>Badge :<b>{{existeEmailInfo.badge}}</b></span><br>
                                     <span>Barecode :<b>{{existeEmailInfo.barecode}}</b></span><br>
-                                    <span v-if="existeEmailInfo.admin">Admin :<b>{{existeEmailInfo.admin.name}}</b></span>
+                                    <span v-if="existeEmailInfo.admin">Admin :<b>{{existeEmailInfo.admin.name}}</b></span><br>
+                                    <v-btn v-if="confirme(existeEmailInfo)" @click="print(existeEmailInfo)" outlined color="green">
+                                        <v-icon small >
+                                            mdi-printer
+                                        </v-icon>
+                                    </v-btn>
                                 </v-card-text>
                                 <v-divider></v-divider>
                                 <v-card-actions>
@@ -91,9 +96,6 @@
                             <v-icon @click="getEmailInfo(item)">
                                 mdi-text-box-search
                             </v-icon>
-                            <v-icon small v-if="confirme(item)" @click="print(item)" >
-                                mdi-printer
-                            </v-icon>
                         </template>
                     </v-data-table>
                 </v-card>
@@ -105,10 +107,10 @@
             </a>
         </div>
     </v-container>
-    <v-container class="print">
-        <v-row align="center" justify="center">
-            <v-col align="center" class="printName">
-            <b>{{getallname}}</b>
+     <v-container class="print">
+        <v-row >
+            <v-col align="center" class="printName" cols="12">
+                <b >{{getallname}}</b><br>
             </v-col>
         </v-row>
     </v-container>
@@ -166,6 +168,15 @@ export default {
     created(){
         this.getTotal();
     },
+    mounted(){
+        Echo.channel('newbadge')
+         .listen('badgeEvent', (e) => {
+                this.getTotal()
+         });
+         window.setInterval(() => {
+                this.getTotal()
+            }, 100000)
+    },
     methods:{
         getTotal(){
             axios.get('gettotalusers').then((res) => {
@@ -220,9 +231,10 @@ export default {
         print (item) {
             this.printPrenom = item.prenom
             this.printNom = item.name
+            this.closeInfodialog()
             setTimeout(function() { 
                 window.print();
-            }, 500)
+            }, 700)
             axios.post('addBadge',{'id':item.id}).then(()=>{
                     this.getTotal()
                 })
