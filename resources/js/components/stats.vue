@@ -83,8 +83,9 @@
                                     <v-spacer></v-spacer>
                                 <v-dialog v-model="dialogconfirmation" max-width="500px" persistent>
                                     <v-card>
-                                        <v-card-title class="text-h5">Confirmation de {{ editedItem.name }} {{ editedItem.prenom }} ?</v-card-title>
+                                        <v-card-title class="text-h5">Confirmation de {{ editedItem.name }} {{ editedItem.prenom }} </v-card-title>
                                         <v-card-text>
+                                            <b v-if="!newEmail">{{ editedItem.email }} </b>
                                             <v-col cols="12" md="12" sm="12" v-if="newEmail">
                                                 <v-text-field label="Email*" oninput="this.value = this.value.toLowerCase()"  :rules="[emailRules.email,checkExiste]"  color="blue darken-4" v-model="editedItem.email" class="my-input" required>
                                                 </v-text-field>
@@ -93,7 +94,7 @@
                                         <v-card-actions>
                                             <v-spacer></v-spacer>
                                                 <v-btn color="blue darken-1" text @click="close">Annuler</v-btn>
-                                                <v-btn color="blue darken-1" text @click="confirmItem">Confirmer</v-btn>
+                                                <v-btn color="blue darken-1" text @click="confirmItem" :loading="loading">Confirmer</v-btn>
                                             <v-spacer></v-spacer>
                                         </v-card-actions>
                                     </v-card>
@@ -101,7 +102,7 @@
                             </v-toolbar>
                         </template>
                         <template v-slot:item.actions="{ item }" >
-                            <v-icon small class="" @click="editItemConfirm(item)" >
+                            <v-icon small class="" v-if="!item.confirme" @click="editItemConfirm(item)" >
                                 mdi-check-bold
                             </v-icon>
                             <v-icon @click="getEmailInfo(item)">
@@ -140,7 +141,7 @@ export default {
             dialogInfo:false,
             users:[],
             search:'',
-            pdf:false,
+            loading: false,
             newEmail:false,
             emailRules: {
                    required: v => !!v || 'E-mail vide',
@@ -151,7 +152,7 @@ export default {
             all_headers:[
                 { text: 'Nom', align: 'start', value: 'name', },
                 { text: 'Prenom', value: 'prenom' },
-                { text: 'Email', value: 'email' },
+                /* { text: 'Email', value: 'email' }, */
                 { text: 'Statut', value: 'statut' },
                 { text: 'Confirme', value: 'confirme' },
                 { text: 'Actions', value: 'actions', sortable: false },
@@ -214,8 +215,10 @@ export default {
         },
 
         confirmItem () {
+            this.loading = true
             axios.post('confirmUser',{'editedItem':this.editedItem}).then(()=>{
                 this.close()
+                this.loading = false
                 this.getTotal()
             })
         },
