@@ -35,6 +35,30 @@
                                 </v-card-actions>
                             </v-card>
                         </v-dialog>
+                        <v-dialog v-model="dialogInfo" width="500" >
+                            <v-card>
+                                <v-card-title class="text-h5 grey lighten-2">
+                                    Compte Informations
+                                </v-card-title>
+                                <v-card-text>
+                                    <span>Prenom :<b>{{existeEmailInfo.prenom}}</b></span><br>
+                                    <span>Nom :<b>{{existeEmailInfo.name}}</b></span><br>
+                                    <span>Statut :<b>{{existeEmailInfo.statut}}</b></span><br>
+                                    <span>Email :<b>{{existeEmailInfo.email}}</b></span><br>
+                                    <span>GSM :<b>{{existeEmailInfo.tlf}}</b></span><br>
+                                    <span>Badge :<b>{{existeEmailInfo.badge}}</b></span><br>
+                                    <span>Barecode :<b>{{existeEmailInfo.barecode}}</b></span><br>
+                                    <span v-if="existeEmailInfo.admin">Admin :<b>{{existeEmailInfo.admin.name}}</b></span>
+                                </v-card-text>
+                                <v-divider></v-divider>
+                                <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn color="primary" text  @click="closeInfodialog">
+                                    Fermer
+                                </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
                         <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
                     </v-card-title>
                     <v-data-table :headers="all_headers" :items="users" :search="search" sort-by="calories"  class="elevation-1" >
@@ -63,6 +87,9 @@
                         <template v-slot:item.actions="{ item }" >
                             <v-icon small class="" @click="editItemConfirm(item)" >
                                 mdi-check-bold
+                            </v-icon>
+                            <v-icon @click="getEmailInfo(item)">
+                                mdi-text-box-search
                             </v-icon>
                             <v-icon small v-if="confirme(item)" @click="print(item)" >
                                 mdi-printer
@@ -97,18 +124,16 @@ export default {
             dialogconfirmation: false,
             dialog:false,
             dialogCode:false,
+            dialogInfo:false,
             users:[],
             search:'',
             pdf:false,
+            existeEmailInfo:'',
             editedIndex: -1,
             all_headers:[
                 { text: 'Nom', align: 'start', value: 'name', },
                 { text: 'Prenom', value: 'prenom' },
-                { text: 'Statut', value: 'statut' },
                 { text: 'Email', value: 'email' },
-                { text: 'GSM', value: 'tlf' },
-                { text: 'Barecode', value: 'barecode' },
-                { text: 'Badge', value: 'badge' },
                 { text: 'Confirme', value: 'confirme' },
                 { text: 'Actions', value: 'actions', sortable: false },
             ],
@@ -214,7 +239,15 @@ export default {
         }, 
         getData(){
             this.getTotal();
-        }
+        },
+        getEmailInfo(val){
+            this.existeEmailInfo = val
+            this.dialogInfo = true
+        },
+        closeInfodialog(){
+                this.existeEmailInfo = ''
+                this.dialogInfo = false
+            },
     },
     computed: {
         formTitle () {
