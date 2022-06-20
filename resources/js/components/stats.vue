@@ -94,7 +94,7 @@
                                         <v-card-actions>
                                             <v-spacer></v-spacer>
                                                 <v-btn color="blue darken-1" text @click="close">Annuler</v-btn>
-                                                <v-btn color="blue darken-1" text @click="confirmItem" :loading="loading">Confirmer</v-btn>
+                                                <v-btn color="blue darken-1" text @click="confirmItem" v-if="editedItem.email" :loading="loading">Confirmer</v-btn>
                                             <v-spacer></v-spacer>
                                         </v-card-actions>
                                     </v-card>
@@ -217,12 +217,18 @@ export default {
         },
 
         confirmItem () {
-            this.loading = true
-            axios.post('confirmUser',{'editedItem':this.editedItem}).then(()=>{
-                this.close()
+            if(this.editedItem.email){
+                this.loading = true
+                axios.post('confirmUser',{'editedItem':this.editedItem}).then(()=>{
+                    this.close()
+                    this.loading = false
+                    this.getTotal()
+                })
+            }
+            else{
                 this.loading = false
-                this.getTotal()
-            })
+                return false
+            }
         },
 
         close () {
@@ -257,7 +263,7 @@ export default {
            else if(statut =="speaker"){
                 return "#4527A0"
            }
-            else if(statut =="bureau"){
+            else if(statut =="comite"){
                 return "#B71C1C"
            }
            else if(statut =="sponsor"){

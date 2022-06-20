@@ -5,7 +5,7 @@
               <ul class="myNavbar-nav">
 					<li class="logo">
 						<a href="#" class="myNav-link" @click="goTo('/')">
-						<span class="link-text logo-text">Menu</span>
+            <span class="link-text logo-text">{{ auth_user.name }}</span>
 						<svg aria-hidden="true" focusable="false" data-prefix="fad" data-icon="angle-double-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="svg-inline--fa fa-angle-double-right fa-w-14 fa-5x">
 							<g class="fa-group">
 								<path fill="currentColor" class="fa-secondary"
@@ -110,6 +110,7 @@
           drawer:false
       }
     },
+    props:['auth_user'],
     methods: {
         goTo(path){
            this.$router.push(path).catch(()=>{});
