@@ -102,12 +102,14 @@
                             </v-toolbar>
                         </template>
                         <template v-slot:item.actions="{ item }" >
-                            <v-icon small class="" v-if="!item.confirme" @click="editItemConfirm(item)" >
-                                mdi-check-bold
-                            </v-icon>
-                            <v-icon @click="getEmailInfo(item)">
-                                mdi-text-box-search
-                            </v-icon>
+                            <v-col cols="12" align="right">
+                                <v-icon small class="" v-if="!item.confirme" @click="editItemConfirm(item)" >
+                                    mdi-check-bold
+                                </v-icon>
+                                <v-icon @click="getEmailInfo(item)">
+                                    mdi-text-box-search
+                                </v-icon>
+                            </v-col>
                         </template>
                     </v-data-table>
                 </v-card>
