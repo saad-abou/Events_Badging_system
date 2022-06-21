@@ -280,7 +280,7 @@ export default {
            else if(statut =="speaker"){
                 return "#4527A0"
            }
-            else if(statut =="bureau"){
+            else if(statut =="comite"){
                 return "#B71C1C"
            }
            else if(statut =="sponsor"){

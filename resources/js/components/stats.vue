@@ -83,20 +83,22 @@
                                     <v-spacer></v-spacer>
                                 <v-dialog v-model="dialogconfirmation" max-width="500px" persistent>
                                     <v-card>
-                                        <v-card-title class="text-h5">Confirmation de {{ editedItem.name }} {{ editedItem.prenom }} </v-card-title>
-                                        <v-card-text>
-                                            <b v-if="!newEmail">{{ editedItem.email }} </b>
-                                            <v-col cols="12" md="12" sm="12" v-if="newEmail">
-                                                <v-text-field label="Email*" oninput="this.value = this.value.toLowerCase()"  :rules="[emailRules.email,checkExiste]"  color="blue darken-4" v-model="editedItem.email" class="my-input" required>
-                                                </v-text-field>
-                                            </v-col>
-                                        </v-card-text>
-                                        <v-card-actions>
-                                            <v-spacer></v-spacer>
-                                                <v-btn color="blue darken-1" text @click="close">Annuler</v-btn>
-                                                <v-btn color="blue darken-1" text @click="confirmItem" v-if="editedItem.email" :loading="loading">Confirmer</v-btn>
-                                            <v-spacer></v-spacer>
-                                        </v-card-actions>
+                                        <v-form ref="form" v-model="valid" lazy-validation >
+                                            <v-card-title class="text-h5">Confirmation de {{ editedItem.name }} {{ editedItem.prenom }} </v-card-title>
+                                            <v-card-text>
+                                                <b v-if="!newEmail">{{ editedItem.email }} </b>
+                                                <v-col cols="12" md="12" sm="12" v-if="newEmail">
+                                                    <v-text-field label="Email*" oninput="this.value = this.value.toLowerCase()"  :rules="[emailRules.email,checkExiste]"  color="blue darken-4" v-model="editedItem.email" class="my-input" required>
+                                                    </v-text-field>
+                                                </v-col>
+                                            </v-card-text>
+                                            <v-card-actions>
+                                                <v-spacer></v-spacer>
+                                                    <v-btn color="blue darken-1" text @click="close">Annuler</v-btn>
+                                                    <v-btn color="blue darken-1" text @click="confirmItem" v-if="editedItem.email" :loading="loading">Confirmer</v-btn>
+                                                <v-spacer></v-spacer>
+                                            </v-card-actions>
+                                        </v-form>
                                     </v-card>
                                 </v-dialog>
                             </v-toolbar>
@@ -145,6 +147,7 @@ export default {
             search:'',
             loading: false,
             newEmail:false,
+            valid: true,
             emailRules: {
                    required: v => !!v || 'E-mail vide',
                    email: v => /.+@.+\..+/.test(v) || 'Email doit être valide',
@@ -217,7 +220,7 @@ export default {
         },
 
         confirmItem () {
-            if(this.editedItem.email){
+            if(this.$refs.form.validate()){
                 this.loading = true
                 axios.post('confirmUser',{'editedItem':this.editedItem}).then(()=>{
                     this.close()
