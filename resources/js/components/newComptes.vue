@@ -21,11 +21,11 @@
                                 <v-form ref="form" lazy-validation>
                                     <v-row>
                                         <v-col cols="12" md="3" sm="6">
-                                            <v-select v-model="editedItem.statut" :items="statuts" 
+                                            <v-text-field v-model="editedItem.statut"  counter="250"
                                             :rules="[v => !!v || 'statut vide']"
                                             label="Statut*"
                                             required
-                                            ></v-select>
+                                            ></v-text-field>
                                         </v-col>
                                         <v-col cols="12"  md="3" sm="6">
                                             <v-text-field label="Nom*" v-model='editedItem.nom' counter="250"
@@ -47,24 +47,19 @@
                                             <v-text-field label="Email*"
                                             v-model='editedItem.email'
                                             counter="250"
-                                            :rules="[emailRules.email,checkExiste]"
-                                            required
+                                            :rules="[checkExiste]"
                                             ></v-text-field>
                                         </v-col>
                                         <v-col cols="12"  md="4" sm="6">
                                             <v-text-field label="Ville*"
                                             v-model='editedItem.ville'
                                             counter="250"
-                                            :rules="[v => !!v || 'ville vide']"
-                                            required
                                             ></v-text-field>
                                         </v-col>
                                         <v-col cols="12"  md="4" sm="6">
                                             <v-text-field label="Gsm*"
                                             v-model='editedItem.gsm'
                                             counter="250"
-                                            :rules="[v => !!v || 'gsm vide']"
-                                            required
                                             ></v-text-field>
                                         </v-col>
                                     </v-row>
@@ -137,6 +132,9 @@
                 <v-chip color="green" v-if="checkDuplicate(item.email) == 'U'" dark >
                     Unique
                 </v-chip>
+                <v-chip color="black" v-if="checkDuplicate(item.email) == 'L'" dark >
+                    N'existe pas
+                </v-chip>
             </template>
             <template v-slot:no-data>
                 <v-btn  color="primary" >
@@ -152,7 +150,7 @@
                 <input class="form-control" @change="addInput()" type="file" id="input" accept=".xls,.xlsx,.csv"  >
             </v-col>
             <v-col cols="12" md="2">
-                <button class="btn btn-primary" @click="addExcelList()">Ajouter</button>
+                <button class="btn btn-primary" @click="addExcelList()">Upload</button>
             </v-col>
             <v-col cols="12" md="6" >
                 <v-btn   color="blue-grey" :disabled="addBlock"
@@ -191,8 +189,8 @@
                     email:'',
                 }],
                 emailRules: {
-                   required: v => !!v || 'E-mail vide',
-                   email: v => /.+@.+\..+/.test(v) || 'Email doit être valide',
+                   /* required: v => !!v || 'E-mail vide',
+                   email: v => /.+@.+\..+/.test(v) || 'Email doit être valide', */
                 },
                 selectedFile:'',
                 headers: [
@@ -285,6 +283,7 @@
             this.comptes.splice(index,1)
            },
             checkDuplicate(val) {
+                if(val){
                 const count = this.comptes.filter(item => item.email === val).length
                 const count2 = this.accountsEmails.filter(item => item.email === val).length
                     if (count>1) {
@@ -296,6 +295,10 @@
                     else {
                         return `U`;
                     }
+                }
+                else{
+                    return `L`;
+                }
             },
            checkExiste(val) {
                 if (val && val.length>9){
@@ -320,21 +323,36 @@
                 this.dialogInfo = false
             },
             checkComptes(){
-                const uniqueValues = new Set(this.comptes.map(v => v.email));
-                const compteEmail = this.comptes.map(item => item.email);
-                const accountsEmails = this.accountsEmails.map(item => item.email)
+                //email check
+                const uniqueEmails = new Set(this.comptes.map(v => v.email != null && v.email != "" ? v.email :this.comptes.indexOf(v) ));
+                const compteNewEmails = this.comptes.map(item => item.email  );
+                const accountsOldEmails = this.accountsEmails.map(item => item.email )
+                //comptes nom prenom email check
+                const uniqueComptes = new Set(this.comptes.map(v => v.nom+v.prenom));
+                const comptesNew = this.comptes.map(item => item.nom+item.prenom);
+                const accountsExiste = this.accountsEmails.map(item => item.nom+item.prenom)
                 function findCommonElements(arr1, arr2) {
                     return arr1.some(item => arr2.includes(item))
                 }
-                if (uniqueValues.size < this.comptes.length) {
+                 //email check
+                if (uniqueEmails.size < this.comptes.length) {
                     this.errorMsg = "Un ou plusieurs email(s) sont utilisé(s) deux fois"
                     this.addBlock = true
                 }
-                else if(findCommonElements(compteEmail,accountsEmails)){
-                    this.errorMsg = "Un ou plusieurs email(s) sont déjà enregistré(s)"
+                else if(findCommonElements(compteNewEmails,accountsOldEmails)){
+                    this.errorMsg = "Un ou plusieurs emails(s) sont déjà enregistré(s)"
                     this.addBlock = true
                 }
-                else if(this.comptes.some(item => item.email == null) || 
+                //comptes nom prenom email check
+                else if (uniqueComptes.size < this.comptes.length) {
+                    this.errorMsg = "Un ou plusieurs compte(s) sont utilisé(s) deux fois"
+                    this.addBlock = true
+                }
+                else if(findCommonElements(comptesNew,accountsExiste)){
+                    this.errorMsg = "Un ou plusieurs compte(s) sont déjà enregistré(s)"
+                    this.addBlock = true
+                }
+                else if(this.comptes.some(item => item.statut == null) || 
                         this.comptes.some(item => item.nom == null) ||
                         this.comptes.some(item => item.prenom == null)){
                             this.errorMsg = "Un ou plusieurs champ(s) sont vide(s)"
@@ -348,7 +366,7 @@
 
             addComptes () {
                 this.loading = true
-                if (!this.addBlock && this.comptes.length>0){
+                if (!this.addBlock && this.comptes.length>1){
                     axios.post('addNewComptes', {'comptes':this.comptes }).then(()=>{
                         this.comptes = [{
                             statut:'',
@@ -358,8 +376,13 @@
                             gsm:'',
                             email:'',
                         }]
-                        this.loading = false
+                        this.loading = false,
+                        this.addBlock = true
                     })
+                }
+                else{
+                    this.loading = false,
+                    this.addBlock = true
                 }
             },
 
@@ -384,12 +407,12 @@
                     /* console.log(workbook); */
                     workbook.SheetNames.forEach(sheet => {
                         let rowObject = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheet]);
-                        const keys = ["nom", "prenom", "statut","ville", "email", "gsm"]
+                        const keys = ["nom", "prenom", "statut", "email"]
                         let checkKeys
                         keys.every((e)=>{
                            checkKeys = Object.keys(rowObject[0]).includes(e);
                            if (!checkKeys) {
-                                window.alert('L\'entête de votre fichier Excel doit respecter cet ordre "nom", "prenom", "statut", "ville", "email", "gsm"')
+                                window.alert('L\'entête de votre fichier Excel doit respecter cet ordre "nom", "prenom" , "statut", "email"')
                                 this.comptes = [{
                                     statut:'',
                                     nom:'',
@@ -403,7 +426,7 @@
                             }
                             return true;
                         })
-                        console.log(Object.keys(rowObject[0]));
+                        /* console.log(Object.keys(rowObject[0])); */
                         if (checkKeys) {
                             rowObject.forEach((e)=>{
                                 this.comptes.push(e)
@@ -424,7 +447,7 @@
             axios.get('getAccountsEmails').then((res) =>{this.accountsEmails = res.data})
         },
         mounted() {
-            console.log(window.XLSX);
+            /* console.log(window.XLSX); */
         },
     }
 </script>
