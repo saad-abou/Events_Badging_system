@@ -17,11 +17,11 @@
                         <v-text-field label="Prenom*" :rules="allRule"  color="blue darken-4" v-model="user.prenom" required></v-text-field>
                     </v-col>
                     <v-col cols="12" md="12" sm="12" >
-                        <v-text-field label="Email*" :rules="[emailRules.email,checkExiste]"  color="blue darken-4" v-model="user.email" class="my-input" required>
+                        <v-text-field label="Email*" oninput="this.value = this.value.toLowerCase()" :rules="[emailRules.email,checkExiste]"  color="blue darken-4" v-model="user.email" class="my-input" required>
                         </v-text-field>
                     </v-col>
                     <v-col  cols="12" md="12" sm="12" >
-                        <v-text-field label="Gsm" v-model="user.gsm"></v-text-field>
+                        <v-text-field label="Statut" oninput="this.value = this.value.toLowerCase()" v-model="user.statut"></v-text-field>
                     </v-col>
                     </v-row>
                 </v-form>
@@ -50,13 +50,13 @@
                     nom:'',
                     premom:'',
                     email:'',
-                    gsm:''
+                    statut:''
                 },
                 defaultItem: {
                     nom:'',
                     premom:'',
                     email:'',
-                    gsm:''
+                    statut:''
                 },
                 allRule: [v => !!v || 'Ce champ est requis',],
                 emailRules: {
@@ -79,6 +79,7 @@
                             'user':this.user 
                         }).then((res)=>{
                             axios.post('confirmUser',{'editedItem':res.data}).then(()=>{
+                                this.user = Object.assign({}, this.defaultItem)
                                 this.$emit('close');
                                 this.$emit('newCompte');
                                 this.loading = false

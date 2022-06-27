@@ -84,7 +84,7 @@
                                 <v-dialog v-model="dialogconfirmation" max-width="500px" persistent>
                                     <v-card>
                                         <v-form ref="form" v-model="valid" lazy-validation >
-                                            <v-card-title class="text-h5">Confirmation de {{ editedItem.name }} {{ editedItem.prenom }} </v-card-title>
+                                            <v-card-title class="text-h5" style="white-space:nowrap;">Confirmation de {{ editedItem.name }} {{ editedItem.prenom }} </v-card-title>
                                             <v-card-text>
                                                 <b v-if="!newEmail">{{ editedItem.email }} </b>
                                                 <v-col cols="12" md="12" sm="12" v-if="newEmail">
@@ -105,10 +105,10 @@
                         </template>
                         <template v-slot:item.actions="{ item }" >
                             <v-col cols="12" align="right">
-                                <v-icon small class="" v-if="!item.confirme" @click="editItemConfirm(item)" >
+                                <v-icon large class="" v-if="!item.confirme" @click="editItemConfirm(item)" >
                                     mdi-check-bold
                                 </v-icon>
-                                <v-icon @click="getEmailInfo(item)">
+                                <v-icon large @click="getEmailInfo(item)">
                                     mdi-text-box-search
                                 </v-icon>
                             </v-col>

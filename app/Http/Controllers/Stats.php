@@ -29,7 +29,7 @@ class Stats extends Controller
      */
     public function index()
     {
-        $all=User::with('admin')->get();
+        $all=User::with('admin')->where('statut' , "participant")->get();
         return $all;
     }
 
@@ -139,7 +139,7 @@ class Stats extends Controller
             'name' => $request->user['nom'],
             'prenom'=> $request->user['prenom'],
             'email' => $request->user['email'],
-            'tlf' => $request->user['gsm'],
+            'statut' => $request->user['statut'],
             'password' => Hash::make("123"),
         ]);
         $barecode = time().$user->id;
@@ -149,7 +149,7 @@ class Stats extends Controller
         $msg = [
             'barecode'=> $barename,
         ];
-        Mail::to($request->user['email'],)->send(new Inscription($msg));
+        /* Mail::to($request->user['email'],)->send(new Inscription($msg)); */
         return $user;
     }
 

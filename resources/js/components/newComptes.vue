@@ -330,7 +330,7 @@
                 //comptes nom prenom email check
                 const uniqueComptes = new Set(this.comptes.map(v => v.nom+v.prenom));
                 const comptesNew = this.comptes.map(item => item.nom+item.prenom);
-                const accountsExiste = this.accountsEmails.map(item => item.nom+item.prenom)
+                const accountsExiste = this.accountsEmails.map(item => item.name+item.prenom)
                 function findCommonElements(arr1, arr2) {
                     return arr1.some(item => arr2.includes(item))
                 }
