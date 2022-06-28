@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/','App\Http\Controllers\ViewController@landing')->name('landing');
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->middleware(['auth','admin']);
+/* Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->middleware(['auth','admin']); */
 //Stats
 Route::get('/stats','App\Http\Controllers\ViewController@stats')->middleware(['auth','admin']);
 //add new excel liste
@@ -170,3 +170,6 @@ Route::post('/getSeancesData',[App\Http\Controllers\ReservationController::class
 Route::post('/addReservation',[App\Http\Controllers\ReservationController::class, 'addReservation']);
 //end reservation to track
 Route::post('/addReservationEnd',[App\Http\Controllers\ReservationController::class, 'addReservationEnd']);
+
+//certificat root
+Route::get('certificat-generate',[App\Http\Controllers\PdfGenerateController::class, 'CertificatGenerate'])->middleware(['auth','confirme']);

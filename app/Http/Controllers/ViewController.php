@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\UserOnline;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ViewController extends Controller
 {
@@ -20,9 +21,13 @@ class ViewController extends Controller
 
     public function landing()
     {
-        if(Auth()->user()){
+        if(Auth::user() &&  Auth::user()->admin == 1){
             return view('welcome');
-        }else{
+        }
+        else if(Auth::user() &&  Auth::user()->admin == null ){
+            return view('certificat');
+        }
+        else{
             return view('auth.login');
         }
     }

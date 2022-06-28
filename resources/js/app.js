@@ -49,6 +49,7 @@ Vue.component('stats', require('./components/stats.vue').default);
 Vue.component('userspreinscrit', require('./components/usersPreinscrit.vue').default);
 Vue.component('newcompteform', require('./components/newCompteForm.vue').default);
 Vue.component('stream', require('./components/streamCode.vue').default);
+Vue.component('certificat', require('./components/certificat.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
