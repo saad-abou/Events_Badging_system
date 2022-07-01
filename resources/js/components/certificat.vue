@@ -1,9 +1,9 @@
 <template >
     <v-app style="background-image: linear-gradient(to right top, #1a5174, #1d4161, #1d314f, #1a233c, #14152a);">
         <v-container>
-        <v-card>
+        <v-card v-if="auth_user.statut == 'participant' && auth_user.confirme == 1">
             <div class="instructiontext p-3">
-                <h3 style="color:blue;text-align: center;"><b>Vos certificats sont disponibles !</b></h3>
+                <h3 style="color:#408DBE;text-align: center;"><b>Votre certificat est disponible !</b></h3>
                 <div class="wrapper">
                     <div class="divider div-transparent"></div>
                 </div>
@@ -19,6 +19,14 @@
                         </a>
                     </v-col>
                 </v-row>
+                <div class="wrapper">
+                    <div class="divider div-transparent"></div>
+                </div>
+            </div>
+        </v-card>
+        <v-card v-else>
+            <div class="instructiontext p-3">
+                <h3 style="color:#408DBE;text-align: center;"><b>Certificat non disponible !</b></h3>
                 <div class="wrapper">
                     <div class="divider div-transparent"></div>
                 </div>
