@@ -38,13 +38,6 @@ Vue.use(BootstrapVue) // Telling Vue to use this in whole application
 
 Vue.component('home', require('./components/home.vue').default);
 Vue.component('newcomptes', require('./components/newComptes.vue').default);
-Vue.component('admin', require('./components/admin/layouts.vue').default);
-Vue.component('question', require('./components/admin/question.vue').default);
-Vue.component('tracker', require('./components/admin/tracker.vue').default);
-Vue.component('lien', require('./components/admin/lien.vue').default);
-Vue.component('Table', require('./components/admin/theme.vue').default);
-Vue.component('moderateur', require('./components/moderateur.vue').default);
-Vue.component('share', require('./components/share.vue').default);
 Vue.component('stats', require('./components/stats.vue').default);
 Vue.component('userspreinscrit', require('./components/usersPreinscrit.vue').default);
 Vue.component('newcompteform', require('./components/newCompteForm.vue').default);

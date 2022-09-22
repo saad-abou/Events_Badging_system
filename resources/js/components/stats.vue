@@ -67,12 +67,12 @@
                         <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
                     </v-card-title>
                     <v-data-table :headers="all_headers" :items="users" :search="search" sort-by="calories"  class="elevation-1" >
-                        <template v-slot:item.confirme="{ item }">
+                        <template v-slot:[`item.confirme`]="{ item }">
                             <v-chip :color="getConfirme(item.confirme)" dark >
                                 <v-icon>{{ getConfirmeIcon(item.confirme) }}</v-icon>
                             </v-chip>
                         </template>
-                        <template v-slot:item.statut="{ item }">
+                        <template v-slot:[`item.statut`]="{ item }">
                             <v-chip :color="getStatut(item.statut)" dark >
                                 <b>{{ item.statut }}</b>
                             </v-chip>
@@ -103,9 +103,9 @@
                                 </v-dialog>
                             </v-toolbar>
                         </template>
-                        <template v-slot:item.actions="{ item }" >
+                        <template v-slot:[`item.actions`]="{ item }" >
                             <v-col cols="12" align="right">
-                                <v-icon large class="" v-if="!item.confirme" @click="editItemConfirm(item)" >
+                                <v-icon large class="" v-if="!item.confirme || item.confirme == 0" @click="editItemConfirm(item)" >
                                     mdi-check-bold
                                 </v-icon>
                                 <v-icon large @click="getEmailInfo(item)">
@@ -244,7 +244,7 @@ export default {
         },
 
         getConfirme (confirme) {
-           if(confirme){
+           if(confirme && confirme > 0){
                return "green"
            }
            else{
@@ -252,7 +252,7 @@ export default {
            }
         },
         getConfirmeIcon (confirme) {
-           if(confirme){
+           if(confirme && confirme > 0){
                return "mdi-check-bold"
            }
            else{

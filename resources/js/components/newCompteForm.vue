@@ -21,7 +21,7 @@
                         </v-text-field>
                     </v-col>
                     <v-col  cols="12" md="12" sm="12" >
-                        <v-text-field label="Statut" oninput="this.value = this.value.toLowerCase()" v-model="user.statut"></v-text-field>
+                        <v-select label="Statut" oninput="this.value = this.value.toLowerCase()" v-model="user.statut"  :items="items"  ></v-select>
                     </v-col>
                     </v-row>
                 </v-form>
@@ -46,6 +46,7 @@
                 dialog: false,
                 loading: false,
                 accountsEmails:[],
+                items: ['participant', 'speaker', 'comite', 'sponsor'],
                 user:{
                     nom:'',
                     premom:'',

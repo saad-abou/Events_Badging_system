@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/','App\Http\Controllers\ViewController@landing')->name('landing');
 
-/* Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->middleware(['auth','admin']); */
+
 //Stats
 Route::get('/stats','App\Http\Controllers\ViewController@stats')->middleware(['auth','admin']);
 //add new excel liste
@@ -29,94 +29,9 @@ Route::get('/usersPreinscrit','App\Http\Controllers\ViewController@usersPreinscr
 Route::get('/allSeances','App\Http\Controllers\ViewController@landing')->middleware(['auth','admin']);
 //liste seance track
 Route::get('/seanceTrack/{id}','App\Http\Controllers\ViewController@landing')->middleware(['auth','admin']);
-//Reserver
-
-Route::get('/admin', 'App\Http\Controllers\ViewController@admin')->middleware('auth');
-
-Route::get('/admin/question', 'App\Http\Controllers\ViewController@question');
-
-Route::get('/admin/tracker', 'App\Http\Controllers\ViewController@tracker');
-
-Route::get('/admin/link', 'App\Http\Controllers\ViewController@link');
-
-Route::get('/getquestions', 'App\Http\Controllers\QuestionController@index');
-
-Route::get('/getarchive', 'App\Http\Controllers\QuestionController@archive');
-
-Route::post('/clear', 'App\Http\Controllers\QuestionController@clear');
-
-Route::get('/moderateur','App\Http\Controllers\ViewController@moderateur');
-
-Route::post('/sharescreen/{id}','App\Http\Controllers\QuestionController@share');
-
-Route::get('/getlatestshares','App\Http\Controllers\QuestionController@latestshare');
-
-Route::get('/share', 'App\Http\Controllers\ViewController@share');
-
-//Add Question
-Route::post('addquestion','App\Http\Controllers\QuestionController@create');
-
-//polls
-Route::get('/getpolls', 'App\Http\Controllers\PollController@index');
-
-//delete polls
-Route::post('/deletepolls/{id}', 'App\Http\Controllers\PollController@destroy');
-
-//Add polls
-Route::post('/addpolls', 'App\Http\Controllers\PollController@create');
-
-//Update Polls
-Route::post('/updatepolls', 'App\Http\Controllers\PollController@update');
-
-//Show Polls
-Route::post('/showpolls/{id}', 'App\Http\Controllers\PollController@show');
-
-//Hide Polls
-Route::post('/hidepolls/{id}', 'App\Http\Controllers\PollController@hide');
-
-//Add Link
-Route::post('/addlink', 'App\Http\Controllers\LienController@create');
-
-//Themes
-Route::get('/getthemes', 'App\Http\Controllers\ThemeController@index');
-
-//Add Theme
-Route::post('/addtheme', 'App\Http\Controllers\ThemeController@create');
-
-//Add Color
-Route::post('/addcolor', 'App\Http\Controllers\ColorController@create');
-
-Route::post('/addimages','App\Http\Controllers\ImageController@create');
-
-//add resume
-Route::post('/addresume','App\Http\Controllers\CvController@create');
-
-//get themes
-Route::get('/getthemes', 'App\Http\Controllers\ThemeController@getThemes');
-
-//get image
-Route::get('/getimages', 'App\Http\Controllers\ThemeController@getImages');
-
-//get resume
-Route::get('/getresumes', 'App\Http\Controllers\ThemeController@getResume');
-
-//get color
-Route::get('/getcolor', 'App\Http\Controllers\ThemeController@getColor');
-
-//get color
-Route::get('/getlink', 'App\Http\Controllers\ThemeController@getLink');
-
-//Show themes
-Route::post('/showtheme/{id}', 'App\Http\Controllers\ThemeController@ShowTheme');
-
-//Hide themes
-Route::post('/hidetheme/{id}', 'App\Http\Controllers\ThemeController@HideTheme');
 
 //login
 Route::post('/login', 'App\Http\Controllers\AppUserController@find');
-
-//get tracker
-// Route::get('/gettracker','App\Http\Controllers\AppUserController@index');
 
 //get Unique
 Route::get('/getunique','App\Http\Controllers\AppUserController@getUnique');

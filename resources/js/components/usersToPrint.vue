@@ -340,8 +340,8 @@ export default {
         margin-left: -15px!important;
         position: absolute;
         top: 40%;
-        -ms-transform: translateY(-40%);
-        transform: translateY(-40%);
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
         font-family: 'Poppins', sans-serif;
     }
 @media print{
@@ -357,8 +357,8 @@ export default {
         margin-left: -20px!important;
         position: absolute;
         top: 40%;
-        -ms-transform: translateY(-40%);
-        transform: translateY(-40%);
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
         font-family: 'Poppins', sans-serif;
     }
 }
